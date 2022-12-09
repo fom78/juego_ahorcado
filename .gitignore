@@ -1,2 +1,5 @@
 env
+env1
 output
+__pycache__
+ahorcado.db

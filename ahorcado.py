@@ -1,7 +1,9 @@
 import os
+from colorama import init, Fore
 from random import randint
-from gestion import iniciarDB, obtenerPalabras
+from gestion import iniciarDB, obtenerPalabras, obtenerUsuario, editarPuntaje, agregarUsuario, obtenerUsuarios
 
+init()
 
 iniciarDB()
 
@@ -12,7 +14,7 @@ palabraSecreta = listado[indice]
 letrasIntentadas=[]
 vidasRestantes = 5
 
-
+nombre = input("Su nombre: ")
 while True:
   os.system("cls")
   
@@ -30,7 +32,8 @@ while True:
   print("-"*50)
 
   if encontradas == len(palabraSecreta):
-    print("GANASTE")
+    print(f"{Fore.GREEN} {nombre} GANASTE")
+    puntaje = vidasRestantes * len(palabraSecreta)
     break
 
   # Mostrar letras ya intentadas (Erroneas y las correctas)
@@ -39,7 +42,7 @@ while True:
 
   # Mostrar Vidas restantes
   print("######## Vidas Restantes ######")
-  print(f"Che te restan {vidasRestantes} intentos")
+  print(f"{nombre} te restan {vidasRestantes} intentos")
   
   # Pedir ingreso de una letra
   letraIngresada = input("Letra ? ")
@@ -57,15 +60,38 @@ while True:
 
       os.system("pause")
 
-
-
-  # # Vidas
-  # if letraIngresada not in palabraSecreta:
-  #   vidasRestantes = vidasRestantes - 1
-    
   
 
   if vidasRestantes == 0:
-    print(f"Perdiste, la palabra era {palabraSecreta}")
+    print(f"{Fore.RED} {nombre} Perdiste, la palabra era {palabraSecreta}")
+    puntaje = -1 * len(palabraSecreta)
     break
 
+
+print(f"{Fore.BLUE} {nombre} tu puntaje fue: {puntaje}, este se actualizara en tu usuario")
+
+# Gestion del usuario
+nombre = nombre.lower()
+usuario = obtenerUsuario(nombre)
+
+if usuario:
+  # Existe, modificar puntaje
+
+  usuario["puntaje"] = usuario["puntaje"] + puntaje
+  if usuario["puntaje"] <= 0:
+    usuario["puntaje"] = 0
+  editarPuntaje(usuario["id"],usuario["puntaje"])
+else:
+  # No existe, agregarlo con el puntaje
+  if puntaje <= 0:
+    puntaje = 0
+  agregarUsuario(nombre, puntaje)
+
+print("Posiciones Totales:")
+
+usuarios = obtenerUsuarios()
+
+for usu in usuarios:
+  print(f"{usu['nombre']} >>>> {usu['puntaje']}")
+
+os.system("pause")

@@ -1,7 +1,7 @@
 import sqlite3
 
 def iniciarDB():
-  listado=["casa","argentina","mundial","fabrica","casita"]
+  listado=["casa","argentina","mundial","fabrica","casita","mesa","masa","martillo","escuela","humano","pelicula","computadora","campeon","galletita","mate","perro","gato","nuez","serie","lindo","techo","algo"]
   conexion= sqlite3.connect("ahorcado.db")
   cursor=conexion.cursor()
 
